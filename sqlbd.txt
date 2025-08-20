@@ -1,0 +1,49 @@
+-- Crear la base de datos
+CREATE DATABASE idat_bank;
+
+-- Usar la base de datos creada
+USE idat_bank;
+
+-- Crear la tabla 'Usuarios'
+CREATE TABLE Usuarios (
+    id INT PRIMARY KEY IDENTITY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+	contraseña VARCHAR(100) NOT NULL
+);
+
+-- Crear la tabla 'Cuentas'
+CREATE TABLE Cuentas (
+    Id BIGINT PRIMARY KEY IDENTITY,
+    UsuarioId INT NOT NULL,
+    TipoCuenta VARCHAR(100) NOT NULL,
+    Saldo DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
+    FOREIGN KEY (UsuarioId) REFERENCES Usuarios(Id)
+);
+
+-- Crear la tabla 'Transferencias'
+CREATE TABLE Transferencias (
+    Id BIGINT PRIMARY KEY IDENTITY,
+    CuentaOrigenId BIGINT NOT NULL,
+    CuentaDestinoId BIGINT NOT NULL,
+    Fecha DATETIME NULL,
+    Monto DECIMAL(15, 2) NOT NULL,
+    Tipo VARCHAR(100) NOT NULL,
+    FOREIGN KEY (CuentaOrigenId) REFERENCES Cuentas(Id),
+    FOREIGN KEY (CuentaDestinoId) REFERENCES Cuentas(Id)
+);
+
+INSERT INTO Usuarios (nombre, email, contraseña)
+VALUES ('Juan Pérez', 'juan.perez@email.com', '1234');
+
+INSERT INTO Cuentas (UsuarioId, TipoCuenta, Saldo)
+VALUES (1, 'Ahorros', 1000.00);
+
+INSERT INTO Cuentas (UsuarioId, TipoCuenta, Saldo)
+VALUES (1, 'Sueldo', 2000.00);
+
+INSERT INTO Transferencias (CuentaOrigenId, CuentaDestinoId, Fecha, Monto, Tipo)
+VALUES (1, 2, GETDATE(), 100.00, 'Egreso');
+
+SELECT * FROM Cuentas;
+
